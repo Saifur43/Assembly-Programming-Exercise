@@ -1,0 +1,84 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+MSG1 DB 'THE SUM OF $'
+MSG2 DB ' AND $'
+MSG3 DB ' IS $'
+MSG4 DB '? $'
+
+.CODE
+MAIN PROC
+    ;INITIALIZE DATA SEGMENT
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;PRINT ?
+    LEA DX,MSG4
+    MOV AH,9
+    INT 21H
+    
+    ;FIRST NUMBER INPUT
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    
+    ;SECOND NUMBER INPUT
+    MOV AH,1
+    INT 21H
+    MOV CL,AL
+    
+    ;NEW LINE
+    MOV AH,2
+    MOV DL,0DH ;CARRIGE RETURN
+    INT 21H
+    MOV DL,0AH ;NEW LINE
+    INT 21H
+    
+    ;PRINT MSG1
+    LEA DX,MSG1
+    MOV AH,9
+    INT 21H
+    
+    ;PRINT FIRST NUMBER
+    MOV AH,2
+    MOV DL,BL
+    INT 21H
+    
+    ;PRINT MSG2
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;PRINT SECOND NUMBER
+    MOV AH,2
+    MOV DL,CL
+    INT 21H
+    
+    ;PRINT MSG3
+    LEA DX,MSG3
+    MOV AH,9
+    INT 21H
+    
+    ;SUMMATION
+    ADD BL,CL
+    
+    ;CONVERT TO DECIMAL
+    SUB BL,48D
+    
+    ;PRINT SUM
+    MOV AH,2
+    MOV DL,BL
+    INT 21H
+    
+    ;DOS EXIT
+    MOV AH,4CH
+    INT 21H
+    
+    
+    MAIN ENDP
+END MAIN
+    
+     
+
+
