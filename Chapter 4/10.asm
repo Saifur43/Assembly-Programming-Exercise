@@ -1,0 +1,45 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+MSG1 DB 'ENTER A HEX DIGIT: $'
+MSG2 DB 'IN DECIMAL IT IS: 1$'
+
+.CODE
+MAIN PROC
+    ;INITIALIZE DATA SEGMENT
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;PRINT MSG1
+    LEA DX,MSG1
+    MOV AH,9
+    INT 21H
+    
+    ;HEX DIGIT INPUT
+    MOV AH,1
+    INT 21H
+    MOV BL,AL 
+    
+    ;NEW LINE
+    MOV AH,2
+    MOV DL,0DH
+    INT 21H
+    MOV DL,0AH
+    INT 21H
+    
+    ;CONVERT TO DECIMAL
+    SUB BL,17D
+    
+    ;PRINT MSG2
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;PRINT HEX DIGIT
+    MOV AH,2
+    MOV DL,BL
+    INT 21H
+    
+    MAIN ENDP
+END MAIN
