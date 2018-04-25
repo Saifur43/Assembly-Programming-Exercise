@@ -1,0 +1,128 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+MSG1 DB 10,13, 'ENTER A HEX DIGIT: $' 
+MSG2 DB 10,13, 'IN DECINAL IT IS: $'
+MSG3 DB 10,13, 'AGAIN ?: $'
+MSG4 DB 10,13, 'ILLEAGAL CHARACTER ENTER 0-9 OR A-F: $'
+
+.CODE
+MAIN PROC
+    
+    ;DATA SEGMENT INITIALIZATION
+    MOV AX,@DATA
+    MOV DS,AX
+    
+   AGAIN:
+    
+    ;PRINT MSG1
+    LEA DX,MSG1
+    MOV AH,9
+    INT 21H
+    
+    ;INPUT HEX DIGIT
+    MOV AH,1
+    INT 21H
+    
+    MOV BL,AL
+     
+    JMP GO
+   
+   ;CHECKING RIGHT INPUT 
+   GO:
+    
+    ;COMPARING WITH 9
+    CMP BL,'9'
+    
+    ;IF GREATER THAN 9 
+    JA HEX
+    
+    ;LESS OR EQUAL 9
+    JBE NUM
+    
+   
+   ;IF THE NUMBER IN HEX DIGIT 
+   HEX:
+   
+   ;COMPAREWITH F 
+    CMP BL,'F'
+    
+    ;IF GREATER THAN F ILLEGAL INPUT
+    JA ILLEAGAL
+    
+    ;PRINT MSG2
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;PRINT 1
+    MOV DL,49D
+    MOV AH,2
+    INT 21H
+    
+    ;CONVER TO DECIMAL
+    SUB BL,17D
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+    
+    ;FOR AGAIN INPUT
+    JMP INP
+    
+   INP:
+    
+    ;PRINT MSG3
+    LEA DX,MSG3
+    MOV AH,9
+    INT 21H
+    
+    ;INPUT
+    MOV AH,1
+    INT 21H
+    
+    ;IF THE INPUT IS Y THEN AGAIN
+    MOV CL,AL
+    CMP CL,'Y'
+    JE AGAIN
+    
+    ;ELSE EXIT
+    JMP EXIT
+    
+    
+   ;IF THE INPUT IS NUMBER
+   NUM:
+   
+   ;IF LESS THE 0 THEN ILLEAGAL
+    CMP BL,'0'
+    JB ILLEAGAL
+    
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;ELSE PRINT THE NUMBER
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+    
+    JMP INP
+    
+   
+   
+   ;IF ILLEAGAL 
+   ILLEAGAL:
+    LEA DX,MSG4
+    MOV AH,9
+    INT 21H
+    
+    ;AGAIN INPUT
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    JMP GO
+    
+   EXIT:
+   
+    MAIN ENDP
+END MAIN

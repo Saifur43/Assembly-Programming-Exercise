@@ -1,0 +1,73 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+.CODE
+MAIN PROC
+    ;INITIALIZE FROM FIRST ASCII CHARACTER
+    MOV CX,127
+    
+    ;SET BL TO ZERO
+    MOV BL,0
+   
+   ;PRINT CHARACTERS 
+   PRINT:
+   
+    MOV AH,2
+    
+    ;INCREMENT CX VALUE
+    INC CX
+    
+    ;COMPARE CX TO LAST ASCII CHARACTER
+    CMP CX,255
+     
+     
+    ;IF ABOVE THEN EXIT
+    JA EXIT
+    
+    ;PRINT THE CHARACTER
+    MOV DX,CX
+    INT 21H
+    
+    ;PRINT SPACE
+    MOV DX,32D
+    INT 21H
+           
+           
+    ;JUMP TO PRINT NEWLINE
+    JMP LINE
+    
+   LINE:
+    ;INCREMENT BL VALUE
+    INC BL
+    
+    ;IF 10  CHATACTERS IS PRINT
+    CMP BL,10
+    
+    ;PRINT NEW LINE
+    JE NEWLINE
+    
+    ;THEN GO TO PRINT
+    JMP PRINT
+   
+   ;PRINT NEW LINE
+   NEWLINE:
+    MOV AH,2
+    MOV DL,0DH
+    INT 21H
+    MOV DL,0AH
+    INT 21H
+    
+    
+    ;SET BL AGAIN TO ZERO
+    MOV BL,0
+    JMP PRINT
+    
+    
+   EXIT: 
+
+    
+    
+    MAIN ENDP
+END MAIN
+  
