@@ -1,0 +1,84 @@
+.MODEL SMALL
+.STACK 100H  
+
+.DATA
+MSG1 DB 'TYPE A CHARACTER:$'
+MSG2 DB 0DH,0AH,'THE ASCII CODE OF $'
+MSG3 DB ' IN BINARY IS $'                   
+MSG4 DB 0DH,0AH,'THE NUMBER OF 1 BITS IS $' 
+
+.CODE
+MAIN PROC
+    ;DATA SEGMENT INITIALIZATION
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;PRINT MSG1
+    LEA DX,MSG1
+    MOV AH,9
+    INT 21H
+    
+    ;CHARACTER INPUT
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    
+    ;PRINT MSG2
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;OUTPUT CHRCATER
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+    
+    ;PRINT MSG3    
+    LEA DX,MSG3
+    MOV AH,9
+    INT 21H
+    
+    ;FOR 8 BIT 
+    MOV CX,8
+    
+    ;NUMBER OF 1'S
+    MOV BH,0
+    
+   BINARY:
+    ;MOVE MSB TO CARRY FLAG
+    SHL BL,1
+    
+    ;IF CF=0
+    JNC ZERO
+    
+    ;IF CF=1 INCREMENT BH
+    INC BH
+    
+    ;PRINT 1
+    MOV DL,31H
+    JMP DISPLAY
+   
+   ;ELSE PRINT 0 
+   ZERO:
+    MOV DL,30H
+    
+   ;OUTPUT ONE BY ONE
+   DISPLAY:
+    MOV AH,2
+    INT 21H
+    LOOP BINARY ;LOOP WILL BE TERMINATED WHILE CX>8
+    
+    ADD BH,30H
+    
+    ;PRINT MSG4
+    LEA DX,MSG4
+    MOV AH,9
+    INT 21H
+    
+    
+    MOV DL,BH
+    MOV AH,2
+    INT 21H           
+    
+    MAIN ENDP
+END MAIN

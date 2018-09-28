@@ -1,0 +1,83 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+MSG1 DB 'TYPE A BINARY NUMBER UPTO 16 DIGITS:$'
+MSG2 DB 10,13,'IN HEX IT IS:$'
+.CODE
+MAIN PROC
+    ;DATA SEGMENT INTIALIZATION
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;PRINT MSG1
+    LEA DX,MSG1
+    MOV AH,9
+    INT 21H
+    
+    ;CLER BX REGISTER
+    XOR BX,BX
+    
+    ;INPUT
+    MOV AH,1
+    INT 21H
+    
+   INPUT:
+    ;INPUT ULTIL ENTER IS PRESSED
+    CMP AL,0DH
+    JE EXIT
+    
+    ;AL
+    AND AL,0FH  ;
+    
+    ;SHIFT BX 1 TIMES LEFT
+    SHL BX,1
+    
+    ;0 1
+    OR BL,AL
+    INT 21H
+    ;INPUT ULTIL ENTER IS PRESSED
+    JMP INPUT
+    
+   EXIT:
+   ;PRINT MS2
+    LEA DX,MSG2
+    MOV AH,9
+    INT 21H
+    
+    ;LOOP 4 TIMES
+    MOV CX,4
+    
+   CONVERT:
+    MOV DL,BH
+    ;SHIFT LEFT 4 BITS
+    SHR DL,1
+    SHR DL,1
+    SHR DL,1
+    SHR DL,1
+    
+    ;COMPARE WITH 9
+    CMP DL,9
+    
+    ;IF LESS OR EQUAL 9
+    JBE NUM
+    
+    ;CONVER TO CHARACTER
+    ADD DL,55D
+    JMP DISPLAY
+    
+   NUM:
+   ;OUTPUT NUMBER
+    ADD DL,30H 
+    
+   DISPLAY:
+    MOV AH,2
+    INT 21H
+    
+    ;NEXT 4 BITS
+    RCL BX,1
+    RCL BX,1
+    RCL BX,1
+    RCL BX,1
+    LOOP CONVERT
+    MAIN ENDP
+END MAIN
